@@ -1,0 +1,103 @@
+import random
+cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+
+
+def deal_card(cards):
+    return random.choice(cards)
+
+def is_blackjack(hand):
+    return sorted(hand) == [10,11]
+
+def adjust_for_ace(hand):
+    hand[hand.index(11)] = 1
+    total_hand = sum(hand)
+    return total_hand
+
+def calculate_total(hand):
+    total = sum(hand)
+
+    while total > 21 and 11 in hand:
+        hand[hand.index(11)] = 1
+        total = sum(hand)
+    return total
+
+
+def play_game():
+
+    user = [deal_card(cards), deal_card(cards)]
+    computer = [deal_card(cards), deal_card(cards)]
+
+
+    if is_blackjack(user) and is_blackjack(computer):
+        print(user)
+        print(computer)
+        print("Draw")
+        return
+
+    if is_blackjack(computer):
+        print(user)
+        print(computer)
+        print("Computer wins!")
+        return
+
+    if is_blackjack(user):
+        print(user)
+        print(computer)
+        print("User wins!")
+        return
+
+    while True:
+        total_user = calculate_total(user)
+        total_computer = calculate_total(computer)
+
+        print("Your hand:", user)
+        print("Your total:", total_user)
+        print("Computer hand:", computer[0])
+
+        if total_user > 21:
+            print("Computer wins!")
+            return
+
+        if total_computer > 21:
+            print("User wins!")
+            return
+
+        reply = input("Do you want to draw another card? (y/n): ")
+        if reply == "y":
+            user.append(deal_card(cards))
+        else:
+            break
+
+    total_computer = calculate_total(computer)
+
+    while total_computer < 17:
+        computer.append(deal_card(cards))
+        total_computer = calculate_total(computer)
+
+    total_computer = calculate_total(computer)
+    total_user = calculate_total(user)
+
+    print("\nFinal Results:")
+    print("Your hand:", user, "Total:", total_user)
+    print("Computer hand:", computer, "Total:", total_computer)
+
+    if total_computer > 21:
+        print("User wins!")
+        return
+    else:
+        if total_computer > total_user:
+            print("Computer wins!")
+            return
+
+        elif total_user > total_computer:
+            print("User wins!")
+            return
+
+        else:
+            print("Draw!")
+            return
+
+
+while input("Do you want to play a game of Blackjack? Type 'y' or 'n': ") == "y":
+    print("\n" * 40)
+    play_game()
